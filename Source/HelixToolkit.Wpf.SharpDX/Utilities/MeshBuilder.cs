@@ -166,12 +166,12 @@ namespace HelixToolkit.Wpf.SharpDX
 
         public Vector2Collection TextureCoordinates { get { return this.textureCoordinates; } set { this.textureCoordinates = value; } }
 
-        public IntCollection TriangleIndices { get { return this.triangleIndices;} }
+        public IntCollection TriangleIndices { get { return this.triangleIndices; } }
 
         public bool HasNormals { get { return this.normals != null; } }
-        
+
         public bool HasTexCoords { get { return this.textureCoordinates != null; } }
-        
+
         public bool HasTangents { get { return this.tangents != null; } }
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace HelixToolkit.Wpf.SharpDX
                     break;
             }
         }
-        
+
         public void ComputeTangents(MeshFaces meshFaces)
         {
             switch (meshFaces)
@@ -365,7 +365,7 @@ namespace HelixToolkit.Wpf.SharpDX
         {
 
             var tan1 = new Vector3[positions.Count];
-            
+
             for (int t = 0; t < indices.Count; t += 4)
             {
                 var i1 = indices[t];
@@ -436,7 +436,7 @@ namespace HelixToolkit.Wpf.SharpDX
         /// </summary>
         public MeshGeometry3D ToMeshGeometry3D()
         {
-            if (this.HasTangents && this.tangents.Count==0)
+            if (this.HasTangents && this.tangents.Count == 0)
             {
                 Vector3Collection tan, bitan;
                 ComputeTangents(this.positions, this.normals, this.textureCoordinates, this.triangleIndices, out tan, out bitan);
@@ -620,6 +620,51 @@ namespace HelixToolkit.Wpf.SharpDX
 
             this.AddRevolvedGeometry(pc, point1, dir, thetaDiv);
         }
+
+
+        /// <summary>
+        /// Adds an arrow to the mesh.
+        /// </summary>
+        /// <param name="point1">
+        /// The start point.
+        /// </param>
+        /// <param name="point2">
+        /// The end point.
+        /// </param>
+        /// <param name="diameter">
+        /// The diameter of the arrow cylinder.
+        /// </param>
+        /// <param name="headDiameter">
+        /// The diameter of the arrow head.
+        /// </param>
+        /// <param name="headLength">
+        /// Length of the head (relative to diameter).
+        /// </param>
+        /// <param name="thetaDiv">
+        /// The number of divisions around the arrow.
+        /// </param>
+        public void AddArrow(Vector3 point1, Vector3 point2, double diameter, double headDiameter, double headLength = 3, int thetaDiv = 18)
+        {
+            var dir = point2 - point1;
+            var length = dir.Length();
+            var r = (float)diameter / 2;
+
+            if (headDiameter < diameter)
+            {
+                headDiameter = diameter * 2;
+            }
+            var pc = new Vector2Collection
+                {
+                    new Vector2(0, 0),
+                    new Vector2(0, r),
+                    new Vector2(length - (float)(diameter * headLength), r),
+                    new Vector2(length - (float)(diameter * headLength),(float)headDiameter/2),
+                    new Vector2(length, 0)
+                };
+
+            this.AddRevolvedGeometry(pc, point1, dir, thetaDiv);
+        }
+
 
         /// <summary>
         /// Adds the edges of a bounding box as cylinders.
@@ -821,7 +866,7 @@ namespace HelixToolkit.Wpf.SharpDX
         public void AddFaceNZ()
         {
             var positions = new Vector3[]
-            {                
+            {
                 new Vector3(0,1,0), //p1
                 new Vector3(0,0,0), //p0                
                 new Vector3(1,0,0), //p3
@@ -896,7 +941,7 @@ namespace HelixToolkit.Wpf.SharpDX
         public void AddFaceNX()
         {
             var positions = new Vector3[]
-            {                
+            {
                 new Vector3(0,0,1), //p1
                 new Vector3(0,0,0), //p0                
                 new Vector3(0,1,0), //p3 
@@ -934,7 +979,7 @@ namespace HelixToolkit.Wpf.SharpDX
         public void AddFacePY()
         {
             var positions = new Vector3[]
-            {                                                 
+            {
                 new Vector3(1,1,0), //p3  
                 new Vector3(1,1,1), //p2  
                 new Vector3(0,1,1), //p1
@@ -972,7 +1017,7 @@ namespace HelixToolkit.Wpf.SharpDX
         public void AddFaceNY()
         {
             var positions = new Vector3[]
-            {                                                                                                  
+            {
                 new Vector3(0,0,0), //p0
                 new Vector3(0,0,1), //p1
                 new Vector3(1,0,1), //p2
@@ -1798,8 +1843,8 @@ namespace HelixToolkit.Wpf.SharpDX
             int index0 = this.positions.Count;
 
             // positions
-            var stepy = height / (rows-1);
-            var stepx = width / (columns-1);
+            var stepy = height / (rows - 1);
+            var stepx = width / (columns - 1);
             //rows++;
             //columns++;
             for (int y = 0; y < rows; y++)
@@ -2064,7 +2109,7 @@ namespace HelixToolkit.Wpf.SharpDX
                 }
             }
 
-            this.AddRectangularMeshTriangleIndices(index0, phiDiv + 1, thetaDiv + 1, true);            
+            this.AddRectangularMeshTriangleIndices(index0, phiDiv + 1, thetaDiv + 1, true);
         }
 
         /// <summary>
@@ -2080,7 +2125,7 @@ namespace HelixToolkit.Wpf.SharpDX
         /// The third point.
         /// </param>
         public void AddTriangle(Vector3 p0, Vector3 p1, Vector3 p2)
-        {           
+        {
             var uv0 = new Vector2(0, 0);
             var uv1 = new Vector2(1, 0);
             var uv2 = new Vector2(0, 1);
@@ -2291,10 +2336,10 @@ namespace HelixToolkit.Wpf.SharpDX
         /// </summary>
         /// <param name="vertexIndices">The vertex indices.</param>
         public void AddTriangle(IList<int> vertexIndices)
-        {            
+        {
             for (int i = 0; i < 3; i++)
             {
-                this.triangleIndices.Add(vertexIndices[i]); 
+                this.triangleIndices.Add(vertexIndices[i]);
             }
         }
 
@@ -2303,7 +2348,7 @@ namespace HelixToolkit.Wpf.SharpDX
         /// </summary>
         /// <param name="vertexIndices">The vertex indices.</param>
         public void AddQuad(IList<int> vertexIndices)
-        {            
+        {
             for (int i = 0; i < 4; i++)
             {
                 this.triangleIndices.Add(vertexIndices[i]);
@@ -2871,7 +2916,7 @@ namespace HelixToolkit.Wpf.SharpDX
             var mesh = mb.ToMeshGeometry3D();
             lock (UnitSphereCache)
             {
-                if(!UnitSphereCache.ContainsKey(subdivisions))
+                if (!UnitSphereCache.ContainsKey(subdivisions))
                 {
                     UnitSphereCache.Add(subdivisions, mesh);
                 }
